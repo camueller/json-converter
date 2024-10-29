@@ -1,0 +1,44 @@
+{
+  "name": "json-converter",
+  "version": "1.0.0",
+  "description": "json-converter is a tool for translating/converting a JSON document into another JSON document with a different structure",
+  "main": "dist/json-converter.cjs.js",
+  "module": "dist/json-converter.esm.js",
+  "browser": "dist/json-converter.umd.js",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "jest",
+    "pretest": "npm run build"
+  },
+  "author": "Axel Müller",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/camueller/json-converter.git"
+  },
+  "readmeFilename": "README.md",
+  "keywords": [
+    "json",
+    "map",
+    "mapper",
+    "transform",
+    "transformation",
+    "json to json",
+    "converter"
+  ],
+  "files": [
+    "dist",
+    "src"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.25.9",
+    "@babel/preset-env": "^7.25.9",
+    "babel-jest": "29.7.0",
+    "date-fns": "4.1.0",
+    "jest": "29.7.0",
+    "rollup": "^2.79.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  }
+}
