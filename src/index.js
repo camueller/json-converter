@@ -25,27 +25,27 @@ function getMappingKeys(mapping) {
     return Object.keys(mapping).filter(key => !specKeywords.includes(key));
 }
 
-function getField(mappingSpec, specOnValue, on, arrayIndex) {
-    let field = '';
+function getPath(mappingSpec, specOnValue, on, arrayIndex) {
+    let path = '';
     if(on) {
-        field += on;
+        path += on;
     }
     if(specOnValue) {
-        if(field.length > 0) {
-            field += '.';
+        if(path.length > 0) {
+            path += '.';
         }
-        field += specOnValue;
+        path += specOnValue;
     }
     if(arrayIndex !== undefined) {
-        field += '[' + arrayIndex + ']'
+        path += '[' + arrayIndex + ']'
     }
     if(!!mappingSpec) {
-        if(field.length > 0) {
-            field += '.';
+        if(path.length > 0) {
+            path += '.';
         }
-        field += mappingSpec;
+        path += mappingSpec;
     }
-    return field.length ? field : undefined;
+    return path.length ? path : undefined;
 }
 
 function value(source, path) {
@@ -53,17 +53,17 @@ function value(source, path) {
 }
 
 function readValue(source, mappingSpec, specOnValue, on, arrayIndex) {
-    const mappingSpecExceptLastSegment = mappingSpec[0].substring(0, mappingSpec[0].lastIndexOf('.'));
-    const field = getField(!specOnValue && !on ? mappingSpecExceptLastSegment : undefined, specOnValue, on, arrayIndex);
-    const sourceElement = field ? jsonpath.value(source, field) : source;
     const mappingSpecPathSegments = mappingSpec[0].split('.');
+    const mappingSpecPathExceptLastSegment = Array.from(mappingSpecPathSegments).toSpliced(mappingSpecPathSegments.length - 1).join('.');
+    const path = getPath(!specOnValue && !on ? mappingSpecPathExceptLastSegment : undefined, specOnValue, on, arrayIndex);
+    const sourceElement = path ? jsonpath.value(source, path) : source;
     const sourceElementKey = mappingSpecPathSegments[mappingSpecPathSegments.length - 1];
     return mappingSpec ? sourceElement[sourceElementKey] : sourceElement;
 }
 
 function readValueAndProcess(source, mappingSpec, specOnValue, on, arrayIndex, arrayAllElements) {
-    const field = getField(mappingSpec[0], specOnValue, on, arrayIndex);
-    if(field === fieldNameObject || field === fieldNameArray) {
+    const path = getPath(mappingSpec[0], specOnValue, on, arrayIndex);
+    if(path === fieldNameObject || path === fieldNameArray) {
         return mappingSpec[1];
     }
     const value = readValue(source, mappingSpec, specOnValue, on, arrayIndex);
