@@ -89,10 +89,10 @@
     "text": "",
     "pid": "FjlY9M17",
     "info": {
-      "latitude": 50.2934,
-      "longitude": 8.9824,
+      "latitude": 12.3456,
+      "longitude": 6.5432,
       "distance": 0.005,
-      "place": "Nieder-Rußbacher-Straße 18, 63674 Lindheim, Germany",
+      "place": "Some Street 1, 12345 Some City, Germany",
       "timezone": "Europe/Berlin",
       "time": "2024-10-23T18:54:03+02:00",
       "time_utc": "2024-10-23T16:54:03+00:00"
