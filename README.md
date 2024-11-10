@@ -1,6 +1,6 @@
 `JSON Converter` is a library for translating/converting a JSON document into another JSON document with a different structure. The mapping process follows a dictionary-based specification of how fields map to the new JSON format.
 
-`JSON Converter` is Javascript implementation of the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter). It has the same features (and some more) and even this documentation is largely based on its relative.
+`JSON Converter` is Javascript implementation of the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter). It has the same features (and some more) and even this documentation is largely based on its relative. When I created the Javascript implementation I coded a [test for each of the examples in this documenation](test/json_converter.test.js).
 
 The main function is `json_converter` and takes a JSON input string, a structured specification and an optional `on`parameter:
 
@@ -48,7 +48,11 @@ will result in the conversion:
             }
         }
 
-To convert back to the original JSON in the example, just reverse the field specification, for example, `'person_name': ['person.name']`. Field chaining can be done on multiple levels. However, direct field chaining for JSON array types is not supported. Processing such fields can be expressed through [anchoring](#anchoring) and [nesting](#nested-specification).
+To convert back to the original JSON in the example, just reverse the field specification, for example, `'person_name': ['person.name']`.
+
+Different from the Python-based `JSON Converter` the source field specification is interpreted as [JSON Path](https://github.com/dchester/jsonpath). This supports the specifications the Python-based `JSON Converter` uses, but provides much more flexibility beyond that. In order to test JSON Path Expressions the [JSONPath Online Evaluator](https://jsonpath.com/) is very helpful.
+
+Field chaining can be done on multiple levels. However, direct field chaining for JSON array types is not supported. Processing such fields can be expressed through [anchoring](#anchoring) and [nesting](#nested-specification).
 
 #### Post-Processing using custom functions
 
