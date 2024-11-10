@@ -4,8 +4,8 @@ const specOn = '$on';
 const specAny = '$any';
 const specAnyKey = 'key';
 const specFilter = '$filter';
-const specToArray = '$toArray';
-const specKeywords = [specAny, specOn, specFilter, specToArray];
+const specArrayToObject = '$arrayToObject';
+const specKeywords = [specAny, specOn, specFilter, specArrayToObject];
 const fieldNameObject = '$object';
 const fieldNameArray = '$array';
 
@@ -112,7 +112,7 @@ function mapTo(source, mapping, on, target) {
     const mappingKey = getMappingKeys(mapping)[0];
     if(hasKeyWithMappingSpec || hasAnySpec) {
         const destHierarchy = mappingKey ? mappingKey.split('.') : [];
-        let targetDescendant = mapping[specToArray] ? [] : target;
+        let targetDescendant = mapping[specArrayToObject] ? [] : target;
         for(let i=0; i<destHierarchy.length - 1; i++) {
             const next = targetDescendant[destHierarchy[i]] ?? {};
             targetDescendant[destHierarchy[i]] = next;
@@ -126,9 +126,9 @@ function mapTo(source, mapping, on, target) {
 
         mapFrom(source, mappingForUse, on, targetDescendant);
 
-        if(mapping[specToArray]) {
-            const keyProp = mapping[specToArray][0];
-            const valueProp = mapping[specToArray][1];
+        if(mapping[specArrayToObject]) {
+            const keyProp = mapping[specArrayToObject][0];
+            const valueProp = mapping[specArrayToObject][1];
             Array.from(targetDescendant).forEach(entry => {
                 target[entry[keyProp]] = entry[valueProp];
             });
@@ -148,7 +148,7 @@ function mapTo(source, mapping, on, target) {
 
         const sourceOrSpecOn = source[childMapping[specOn]] ?? source;
 
-        const child = Array.isArray(sourceOrSpecOn) && !childMapping[specToArray] ? [] : {};
+        const child = Array.isArray(sourceOrSpecOn) && !childMapping[specArrayToObject] ? [] : {};
         target[mappingKey] = child;
 
         mapTo(source, childMapping, on, child);
@@ -157,7 +157,7 @@ function mapTo(source, mapping, on, target) {
 
 export function json_converter(json, mapping, on) {
     const source = JSON.parse(json);
-    const result = mapping[specOn] && Array.isArray(value(source, mapping[specOn])) && !mapping[specToArray] ? [] : {};
+    const result = mapping[specOn] && Array.isArray(value(source, mapping[specOn])) && !mapping[specArrayToObject] ? [] : {};
     mapTo(source, mapping, on, result);
     return result;
 }

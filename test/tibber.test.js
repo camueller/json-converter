@@ -14,7 +14,7 @@ describe('tibber', () => {
             '$on': '$..priceInfo.today',
             'total': ['total'],
             'startsAt': ['startsAt', (value) => convertDate(value)],
-            '$toArray': ['startsAt', 'total']
+            '$arrayToObject': ['startsAt', 'total']
         })).toStrictEqual({
             "2024-11-04T00": 0.2951,
             "2024-11-04T01": 0.2926,

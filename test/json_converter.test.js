@@ -353,6 +353,34 @@ describe('json_converter', () => {
                     },
                 ]});
         });
+
+        test('convert array elements to object properties', () => {
+            expect(json_converter(JSON.stringify({
+                "months": [
+                    {
+                        "name": "Januar",
+                        "index": 1
+                    },
+                    {
+                        "name": "Februar",
+                        "index": 2
+                    },
+                    {
+                        "name": "March",
+                        "index": 3
+                    }
+                ]
+            }), {
+                '$on': 'months',
+                'name': ['name'],
+                'index': ['index'],
+                '$arrayToObject': ['name', 'index']
+            })).toStrictEqual({
+                Januar: 1,
+                Februar: 2,
+                March: 3
+            });
+        });
     });
 
     describe('JSON Literals', () => {

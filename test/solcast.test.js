@@ -25,7 +25,7 @@ describe('solcast.com', () => {
             '$filter': ['period_end', (value) => value.startsWith('2024-11-04') && value.match(/.*T..:00.*/)],
             'period_start': ['period_end', (value) => dayHourProcessor(value)],
             'power': ['pv_estimate', (value, arrayIndex, arrayAllElements) => powerPostProcessor(value, arrayIndex, arrayAllElements)],
-            '$toArray': ['period_start', 'power']
+            '$arrayToObject': ['period_start', 'power']
         })).toStrictEqual({
             "2024-11-04T00": 0,
             "2024-11-04T01": 0,

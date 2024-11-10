@@ -240,6 +240,48 @@ For example, to process only books whose prices are above 10.00 from the sample 
 
 While filtering can be applied to single JSON nodes, the application can be limited. Any JSON object filtered out, will appear as an empty JSON object in the resulting document.
 
+#### Convert array elements to object properties
+
+Array elements may be converted into object properties if they have a unique property which can be used as key for the object property.
+
+        '$arrayToObject': [<key_field>, <value_field>]
+
+To illustrate, the following JSON object
+
+        {
+            "months": [
+                {
+                    "name": "Januar",
+                    "index": 1
+                },
+                {
+                    "name": "Februar",
+                    "index": 2
+                },
+                {
+                    "name": "March",
+                    "index": 3
+                }
+            ]
+        }
+
+using the following specification
+
+        {
+            '$on': 'months',
+            'name': ['name'],
+            'index': ['index'],
+            '$arrayToObject': ['name', 'index']
+        }
+
+will result in
+
+        {
+            Januar: 1,
+            Februar: 2,
+            March: 3
+        }
+
 ### JSON Literals
 
 There are situations when the resulting JSON need to contain fields and values outside the scope of the source JSON document. In such cases, it's possible to define a post-processor that plugs-in a pre-defined dictionary-like or list structure. However, support for including literals in the specification is also provided.
