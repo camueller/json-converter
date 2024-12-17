@@ -3,6 +3,7 @@ const jsonpath = require('jsonpath');
 const specOn = '$on';
 const specAny = '$any';
 const specAnyKey = 'key';
+const specAnyValue = 'value';
 const specFilter = '$filter';
 const specArrayToObject = '$arrayToObject';
 const specKeywords = [specAny, specOn, specFilter, specArrayToObject];
@@ -11,11 +12,12 @@ const fieldNameArray = '$array';
 
 function expandAnyMapping(source, mapping) {
     const keyFunc = mapping[specAny][specAnyKey];
+    const valueFunc = mapping[specAny][specAnyValue];
     const srcObject = value(source, mapping[specOn]);
     Object.keys(srcObject).forEach(key => {
-        const transformedKey = keyFunc(key);
+        const transformedKey = keyFunc ? keyFunc(key) : key;
         if(transformedKey) {
-            mapping[transformedKey] = [key];
+            mapping[transformedKey] = valueFunc ? [key, valueFunc] : [key];
         }
     });
     return mapping;

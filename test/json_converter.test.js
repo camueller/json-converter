@@ -437,5 +437,38 @@ describe('json_converter', () => {
                 ]
             });
         });
+
+        describe('using keyword "$any"', () => {
+            const input = {
+                "values": {
+                    value1: 1,
+                    value2: 2,
+                    value3: 3
+                }
+            };
+
+            test('modify key', () => {
+                expect(json_converter(JSON.stringify(input), {
+                    '$on': '$.values',
+                    '$any': {key: (value) => `new${value}`}
+                })).toStrictEqual({
+                    "newvalue1": 1,
+                    "newvalue2": 2,
+                    "newvalue3": 3
+                });
+            });
+
+            test('modify value', () => {
+                expect(json_converter(JSON.stringify(input), {
+                    '$on': '$.values',
+                    '$any': {value: (value) => value * 2}
+                })).toStrictEqual({
+                    "value1": 2,
+                    "value2": 4,
+                    "value3": 6
+                });
+            });
+        });
+
     });
 });
