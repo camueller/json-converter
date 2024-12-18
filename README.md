@@ -1,3 +1,7 @@
+# JSON converter
+
+[![NPM version](https://img.shields.io/npm/v/@camueller/json-converter.svg)](https://www.npmjs.org/package/@camueller/json-converter)
+
 `JSON Converter` is a library for translating/converting a JSON document into another JSON document with a different structure. The mapping process follows a dictionary-based specification of how fields map to the new JSON format.
 
 `JSON Converter` is Javascript implementation of the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter). It has the same features (and some more) and even this documentation is largely based on its relative. When I created the Javascript implementation I coded [unit tests for all the examples in this documentation](test/json_converter.test.js). Besides testing the implementation they also will be helpful understanding how `JSON Converter` works.
