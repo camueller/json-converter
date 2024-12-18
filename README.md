@@ -1,8 +1,8 @@
 `JSON Converter` is a library for translating/converting a JSON document into another JSON document with a different structure. The mapping process follows a dictionary-based specification of how fields map to the new JSON format.
 
-`JSON Converter` is Javascript implementation of the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter). It has the same features (and some more) and even this documentation is largely based on its relative. When I created the Javascript implementation I coded a [test for each of the examples in this documenation](test/json_converter.test.js).
+`JSON Converter` is Javascript implementation of the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter). It has the same features (and some more) and even this documentation is largely based on its relative. When I created the Javascript implementation I coded [unit tests for all the examples in this documentation](test/json_converter.test.js). Besides testing the implementation they also will be helpful understanding how `JSON Converter` works.
 
-The main function is `json_converter` and takes a JSON input string, a structured specification and an optional `on`parameter:
+The main function is `json_converter` and takes a JSON input string, a structured specification and an optional `on` parameter:
 
         json_converter(json_string, specification, on?)
 
@@ -50,17 +50,25 @@ will result in the conversion:
 
 To convert back to the original JSON in the example, just reverse the field specification, for example, `'person_name': ['person.name']`.
 
-Different from the Python-based `JSON Converter` the source field specification is interpreted as [JSON Path](https://github.com/dchester/jsonpath). This supports the specifications the Python-based `JSON Converter` uses, but provides much more flexibility beyond that. In order to test JSON Path Expressions the [JSONPath Online Evaluator](https://jsonpath.com/) is very helpful.
+Different from the [JSON Converter implemented in Python](https://github.com/ebi-ait/json-converter) the source field specification is interpreted as [JSON Path](https://github.com/dchester/jsonpath). This supports the specifications the Python-based `JSON Converter` uses, but provides much more flexibility beyond that. In order to test JSON Path Expressions the [JSONPath Online Evaluator](https://jsonpath.com/) is very helpful.
 
 Field chaining can be done on multiple levels. However, direct field chaining for JSON array types is not supported. Processing such fields can be expressed through [anchoring](#anchoring) and [nesting](#nested-specification).
 
 #### Post-Processing using custom functions
 
-`JSON Converter` allows post processing of field values for more complex translation rules. This is done by specifying a custom function. It is specified after the original field name in the field specification:
+`JSON Converter` allows post-processing of field values for more complex translation rules. This is done by specifying a custom function. It is specified after the original field name in the field specification:
 
         <converted_field>: [<original_field>, <post_processor function>]
 
-`JSON Converter` will pass the value of the specified field as the argument to the post-processor. Taking the same example in the previous section, a boolean field `adult` can be added using this feature. The following spec demonstrates how this can be done:
+`JSON Converter` will pass the following parameters to this function (in this order):
+
+- the value of the specified field
+- the array index (if converting array elements)
+- all array elements (if converting array elements)
+
+The second and third parameter are useful if the function has to access other array elements in order to convert the current array element.
+
+Taking the same example in the previous section, a boolean field `adult` can be added using this feature. The following spec demonstrates how this can be done:
 
         {
             'name': ['person_name'],
@@ -108,7 +116,7 @@ Without the anchor, it's necessary to always include `user.settings.advanced.sec
 
 #### The `$on` Specification
 
-Another way of specifying the anchoring field is by directly adding it to the specification using the `$on` keyword. Unlike field specifications, the `$on` keyword takes a plain string and *not* a list/vector. For example, the previous sample specification can be alternatively expressed as,
+Another way of specifying the anchoring field is by directly adding it to the specification using the `$on` keyword. Unlike field specifications, the `$on` keyword takes a plain string and *not* an array. For example, the previous sample specification can be alternatively expressed as,
 
         {
             '$on': 'user.settings.advanced.security',
@@ -129,6 +137,20 @@ The `on` parameter and the `$on` keyword do **not** override, but instead are ch
         }, 'user.settings')
 
 The `user.settings` field supplied through `on` parameter will be treated as a prefix to the `advanced.security` field specified through the `$on` keyword.
+
+#### The `$any` Specification
+
+Sometimes the field names are unknown or different for each conversion (e.g. timestamp-like field names). In this case the `$any` keyword with a conversion object should be used. The conversion object may contain the following properties:
+
+- `key` with value being a mapping function for the key to which the key value is passed as parameter 
+- `value` with value being a mapping function for the value to which the value is passed as parameter
+
+An example for a key mapping might look like this: 
+
+        {
+            '$on': '$.result.watt_hours_period',
+            '$any': {key: (value) => convertDate(value)}
+        }
 
 ### Nested Specification
 
@@ -241,8 +263,6 @@ For example, to process only books whose prices are above 10.00 from the sample 
                 'book_price': ['price']
             }
         }
-
-While filtering can be applied to single JSON nodes, the application can be limited. Any JSON object filtered out, will appear as an empty JSON object in the resulting document.
 
 #### Convert array elements to object properties
 
