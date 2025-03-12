@@ -4,6 +4,10 @@ const {TZDate} = require('@date-fns/tz');
 const fs = require('node:fs');
 
 function powerPostProcessor(value, arrayIndex, arrayAllElements) {
+    if(arrayIndex == 0) {
+        // if first value is a full hour value, then there is no half hour value to calculate average from
+        return value;
+    }
     const previousElement = arrayAllElements[arrayIndex - 1];
     const previousElementPower = previousElement['pv_estimate'];
     // FIXME use pvForecastFactor = 0.33 from env
